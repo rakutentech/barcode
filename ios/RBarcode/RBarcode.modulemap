@@ -1,0 +1,10 @@
+framework module RBarcode {
+  umbrella header "RBarcode.h"
+
+  export *
+  module * { export * }
+
+  link framework "Foundation"
+  link framework "CoreGraphics"
+  link framework "UIKit"
+}

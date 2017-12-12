@@ -1,0 +1,54 @@
+# Common
+[bB]uild/
+*~
+*.swp
+.DS_Store
+.LSOverride
+thumbs.db
+
+# Android
+.idea/
+**/*.iml
+.gradle/
+.gradletasknamecache/
+.externalNativeBuild/
+javadoc/
+local.properties
+gradle-app.setting
+
+# iOS
+xcuserdata
+*.xccheckout
+*.xcworkspace
+Podfile.lock
+Pods
+
+# Node & React native
+npm-debug.log
+node_modules
+buck-out/
+\.buckd/
+android/app/libs
+android/keystores/debug.keystore
+
+# Fastlane
+artifacts
+**/fastlane/report.xml
+**/fastlane/README.md
+
+# CMake
+Makefile
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+*.a
+*.so
+*.dylib
+*.o
+
+# red-gendoc
+.doxygen
+Doxyfile
+documentation.tag
+documentation/
+

@@ -1,0 +1,21 @@
+opt_out_usage
+default_platform :ios
+
+platform :ios do
+  desc 'Run all the tests'
+  lane :tests do |options|
+    cocoapods
+    scan(
+      clean: true,
+      skip_build: true,
+      output_directory: './artifacts/unit-tests',
+      scheme: 'Tests',
+      code_coverage: true)
+  end
+
+  desc 'CI build'
+  lane :ci do |options|
+    tests(options)
+  end
+end
+# vim:syntax=ruby:et:sts=2:sw=2:ts=2:ff=unix:

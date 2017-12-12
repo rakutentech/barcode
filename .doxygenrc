@@ -1,0 +1,16 @@
+# This file will get merged with ~/Doxyfile before running Doxygen
+PROJECT_NAME     = RBarcode
+PROJECT_BRIEF    = "A barcode generation library"
+INPUT           += ios/RBarcode
+IGNORE_PREFIX    = RBarcode
+#PREDEFINED        += \
+#	"XXX_GENERIC(s)=<s>" \
+#	"XXX_GENERIC_TYPE(s)=s" \
+#	"XXX_FINAL=" \
+#	"XXX_PUBLIC=" \
+#
+#TAGFILES         = \
+#	"$(HOME)/remsdk-tagfiles/deviceinformation-1.5.tag=../deviceinformation-1.5" \
+#	"$(HOME)/remsdk-tagfiles/rakutenapis-1.7.tag=../rakutenapis-1.7"
+
+

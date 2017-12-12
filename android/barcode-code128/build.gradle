@@ -1,0 +1,7 @@
+android.externalNativeBuild.cmake {
+	path 'src/main/cpp/CMakeLists.txt'
+}
+
+dependencies {
+	compile project(path: ':barcode')
+}

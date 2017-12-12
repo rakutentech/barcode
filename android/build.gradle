@@ -1,0 +1,124 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url ARTIFACTORY_RELEASE }
+        maven { url ARTIFACTORY_SNAPSHOT }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'jp.co.rakuten.sdtd.plugin:artifactory:1.2.0'
+        classpath 'jp.co.rakuten.sdtd.plugin:javadoc:1.1.1'
+    }
+}
+
+subprojects {
+    rootProject.buildscript.repositories.each { repositories.add(it) }
+
+    apply plugin: 'com.android.library'
+    android {
+        compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+        buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+
+        defaultConfig {
+            minSdkVersion project.ANDROID_MIN_SDK_VERSION
+            targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
+            versionCode 1
+            versionName project.MODULE_VERSION
+            ndk {
+                abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64'
+            }
+            externalNativeBuild {
+                cmake {
+                    arguments '-DANDROID_PLATFORM=android-' + project.ANDROID_MIN_SDK_VERSION,
+                        '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
+                }
+            }
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
+        }
+
+        buildTypes {
+            debug {
+                resValue 'string', project.MODULE_NAME.replaceAll('-','_') + '__version', project.MODULE_VERSION
+            }
+            release {
+                resValue 'string', project.MODULE_NAME.replaceAll('-','_') + '__version', project.MODULE_VERSION
+
+                minifyEnabled true
+                proguardFiles '../proguard.txt'
+            }
+        }
+
+        lintOptions {
+            disable 'LongLogTag', 'RtlHardcoded'
+        }
+
+        resourcePrefix 'barcode_'
+    }
+
+    dependencies {
+        compile "com.android.support:appcompat-v7:23.0.1"
+
+        androidTestCompile 'com.android.support.test:runner:0.5'
+        androidTestCompile 'com.android.support.test:rules:0.5'
+        testCompile 'jp.co.rakuten.api:test:1.0.0'
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.hamcrest:hamcrest-core:1.3'
+        testCompile 'org.mockito:mockito-core:1.9.5'
+        testCompile('org.robolectric:robolectric:3.1') {
+            exclude group: 'commons-logging', module: 'commons-logging'
+        }
+        // Required for now. See https://github.com/robolectric/robolectric/issues/2581
+        testCompile 'jp.co.rakuten.esd:testrunner:1.0.0'
+    }
+
+    // http://chrisjenx.com/gradle-robolectric-jacoco-dagger/
+    apply plugin: "jacoco"
+
+    jacoco {
+        toolVersion "0.7.1.201405082137"
+    }
+
+    task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports after running tests."
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+        classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug',
+            excludes: ['**/R*.class',
+                       '**/BuildConfig.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class'
+            ])
+        sourceDirectories = files( ['src/main/java' ] )
+        executionData = files("$buildDir/jacoco/testDebugUnitTest.exec")
+    }
+
+    apply plugin: 'jp.co.rakuten.sdtd.javadoc'
+    javadoc {
+        name = project.MODULE_NAME
+        version = project.MODULE_VERSION
+        title = project.MODULE_DESCRIPTION
+    }
+
+    apply plugin: 'jp.co.rakuten.sdtd.artifactory'
+    artifactory {
+        group = project.MODULE_GROUP
+        artifact = project.MODULE_NAME
+        version = project.MODULE_VERSION
+        description = project.MODULE_DESCRIPTION
+        sourceUrl = project.MODULE_REPOSITORY
+    }
+}
+
+// vim:et:sts=4:sw=4:ts=4:ff=unix:

@@ -1,0 +1,6 @@
+# This file will get merged with ~/Doxyfile before running Doxygen
+PROJECT_NAME     = RBarcode
+PROJECT_BRIEF    = "A super-lightweight library for drawing barcodes"
+INPUT           += RBarcode
+IGNORE_PREFIX    = R
+
